@@ -1,0 +1,172 @@
+@startuml
+hide circle
+hide empty members
+
+class "/" as root
+
+class Jeu {
+    titre : String 
+}
+
+class Joueur {
+    vies : int
+    offresAttrapees : int
+}
+
+' ============ MONDE 1 ============
+class Mondes {
+}
+
+class Monde1 {
+    titre : String
+}
+
+class EpreuvesMonde1 {
+}
+
+class Epreuve1 {
+    offresMin : int
+    niveauVitesse : int
+}
+
+class Epreuve2 {
+    tempsMax : int
+}
+
+class Epreuve3 {
+    objectif : int
+}
+
+class Offre {
+    metier : String
+}
+
+class Obstacle {
+    type : TypeObstacle
+}
+
+class CV {
+    offreVisee : Offre
+}
+
+class Ingredient {
+    competence : Competence
+    estPiege : boolean
+    affichage : String
+}
+
+class Recruteur {
+    humeur : Humeur
+}
+
+class ConventionStage {
+}
+
+' ============ MONDE 2 ============
+class Monde2 {
+    titre : String
+}
+
+class EpreuvesMonde2 {
+}
+
+class EpreuveExploration {
+    tempsMax : int
+}
+
+class EpreuveFinale {
+}
+
+class Salle {
+}
+
+class Meuble {
+    type : TypeMeuble
+}
+
+class Examen {
+    numero : int
+    sujet : String
+    indice : String
+}
+
+class Porte {
+    verrouillee : boolean
+    codeSecret : CodeSecret
+}
+
+' ============ TYPES ============
+class Competence << enumeration : String >> {
+    Java
+    Python
+    SQL
+    Git
+    Web
+    Reseau
+    Cloud
+}
+
+class TypeObstacle << enumeration : String >> {
+    Dossier
+    Bug
+}
+
+class Humeur << enumeration : String >> {
+    Enerve
+    Curieux
+    Conquis
+}
+
+class TypeMeuble << enumeration : String >> {
+    Bureau
+    Bibliotheque
+    Armoire
+    Ordinateur
+}
+
+class CodeSecret << restriction : String >> {
+    pattern "[0-9]{3}"
+}
+
+' ============ LIENS ============
+root <-- Jeu
+Jeu *-- Joueur : 1
+Jeu *-- Mondes : 1
+
+Mondes *-- Monde1 : 1
+Mondes *-- Monde2 : 1
+
+' Liens Monde 1
+Monde1 *-- EpreuvesMonde1 : 1
+EpreuvesMonde1 *-- Epreuve1 : 1
+EpreuvesMonde1 *-- Epreuve2 : 1
+EpreuvesMonde1 *-- Epreuve3 : 1
+
+Epreuve1 *-- Offre : 9
+Epreuve1 *-- Obstacle : 1..*
+Epreuve2 *-- CV : 1..*
+Epreuve2 *-- Ingredient : 1..*
+Epreuve3 *-- Recruteur : 1
+Epreuve3 *-- ConventionStage : 1
+
+CV *-- Ingredient : 3
+CV *-- Offre : 1
+
+' Liens Monde 2
+Monde2 *-- EpreuvesMonde2 : 1
+EpreuvesMonde2 *-- EpreuveExploration : 1
+EpreuvesMonde2 *-- EpreuveFinale : 1
+
+EpreuveExploration *-- Salle : 1
+Salle *-- Meuble : 1..*
+Salle *-- Examen : 1..*
+EpreuveFinale *-- Porte : 1
+
+' Liens Types
+Obstacle *-- TypeObstacle : 1
+Ingredient *-- Competence : 0..1
+Recruteur *-- Humeur : 1
+Meuble *-- TypeMeuble : 1
+Porte *-- CodeSecret : 1
+
+@enduml

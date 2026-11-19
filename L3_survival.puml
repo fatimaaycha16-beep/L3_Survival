@@ -1,0 +1,268 @@
+@startuml
+hide circle
+hide empty members
+skinparam packageStyle rectangle
+
+class "/" as root
+
+'  le jeu(initialisation)
+package "structure du jeu (initialisation)" {
+
+    class Jeu {
+        titre : String
+        viesInitiales : Vies
+    }
+
+    class Monde {
+        (Attribut) numero : EntiersPositifs
+        nomM : Nom
+    }
+    class MondeExamens {
+    }
+
+    abstract class Epreuve {
+        (Attribut) idE : Identifiant
+        nomE : Nom
+        ordre : EntiersPositifs
+        intro : String
+    }
+
+    ' ---- Monde 1 ----
+    class Course {
+        offresMin : EntiersPositifs
+        seuilVitesse2 : EntiersPositifs
+        seuilVitesse3 : EntiersPositifs
+    }
+    class Offres {
+    }
+    class Offre {
+        (Attribut) idO : Identifiant
+        poste : Nom
+    }
+    class Exigence {
+        (Attribut) competence : Identifiant
+    }
+    class Obstacles {
+    }
+    class Obstacle {
+        (Attribut) type : TypeObstacle
+    }
+
+    class AtelierCV {
+        tempsParCV : EntiersPositifs
+    }
+    class Competences {
+    }
+    class Competence {
+        (Attribut) idC : Identifiant
+        (Attribut) piege : boolean
+        (Attribut) affichage : Affichage
+        nomC : Nom
+    }
+
+    class Entretien {
+    }
+    class Recruteur {
+        jaugeMax : EntiersPositifs
+        humeur : Humeur
+    }
+
+    ' ---- Monde 2 ----
+    class EpreuveExamen {
+        (Attribut) objet : Identifiant
+        theme : ThemeExamen
+        enonce : String
+        reponse : String
+        indice : String
+    }
+    class EpreuvePorte {
+        (Attribut) objet : Identifiant
+    }
+    class SalleExamen {
+        (Attribut) idS : Identifiant
+        nomS : Nom
+    }
+    class Objets {
+    }
+    class Objet {
+        (Attribut) idObj : Identifiant
+        (Attribut) type : TypeObjet
+        nomObj : Nom
+        message : String
+    }
+}
+
+' gestion du joueur
+package "Gestion du joueur et des parties(sauvegardes)" {
+
+    class Joueur {
+    (Attribut) idJ : Identifiant
+    pseudo : Pseudo
+}
+    class Parties {
+    }
+    class Partie {
+        (Attribut) idP : Identifiant
+        (Attribut) statut : Statut
+        date : dateTime
+        score : EntiersPositifs
+        duree : EntiersPositifs
+    }
+    class Progression {
+        epreuveCourante : Identifiant
+        viesRestantes : Vies
+        offresCollectees : Identifiant [0..9]
+        indicesObtenus : EntiersPositifs
+        codeSecret : CodeSortie [0..1]
+    }
+    class ResultatEpreuve {
+        (Attribut) epreuve : Identifiant
+        reussie : boolean
+        viesPerdues : Vies
+        erreurs : EntiersPositifs
+        duree : EntiersPositifs
+    }
+}
+
+' ============ restrictions  ============
+class EntiersPositifs <<restriction : int>> {
+    supérieur ou égal à 0
+}
+class Vies <<restriction : int>> {
+    entre 0 et 3
+}
+class Identifiant <<restriction : int>> {
+    pattern "[0-9]{2}"
+}
+class Nom <<restriction : String>> {
+    pattern "[A-Z][A-Za-z éèêëàâîïôöùûüç]+"
+}
+class Pseudo <<restriction : String>> {
+    pattern "[A-Za-z0-9_]{3,15}"
+}
+class CodeSortie <<restriction : String>> {
+    pattern "[0-9]{3}"
+}
+
+' ============ enumerations ============
+class TypeObstacle <<enumeration : String>> {
+    dossier
+    bug
+}
+class Humeur <<enumeration : String>> {
+    enerve
+    neutre
+    conquis
+}
+class Affichage <<enumeration : String>> {
+    logo
+    nom
+}
+class ThemeExamen <<enumeration : String>> {
+    tri
+    logique
+    binaire
+}
+class TypeObjet <<enumeration : String>> {
+    bureau
+    bibliotheque
+    armoire
+    ordinateur
+}
+class Statut <<enumeration : String>> {
+    enCours
+    terminee
+    abandonnee
+}
+
+' ---------- heritage ----------
+Monde <|-- MondeExamens
+Epreuve <|-- Course
+Epreuve <|-- AtelierCV
+Epreuve <|-- Entretien
+Epreuve <|-- EpreuveExamen
+Epreuve <|-- EpreuvePorte
+
+' ---------- composition : jeu ----------
+root <-- Jeu
+root <-- Joueur
+
+Jeu *-- Monde : 2..*
+Monde *-- Epreuve : 1..*
+
+Course *-- Offres : 1
+Course *-- Obstacles : 1
+Offres *-- Offre : 9
+Offre *-- Exigence : 3
+Obstacles *-- Obstacle : 1..*
+
+AtelierCV *-- Competences : 1
+Competences *-- Competence : 1..*
+
+Entretien *-- Recruteur : 1
+
+MondeExamens *-- SalleExamen : 1
+SalleExamen *-- Objets : 1
+Objets *-- Objet : 1..*
+
+' ---------- liens joueur ----------
+Joueur *-- Parties : 1
+Parties *-- Partie : 0..*
+Partie *-- Progression : 1
+Partie *-- ResultatEpreuve : 0..*
+
+' ---------- liens ----------
+Jeu *-- Vies : 1
+Progression *-- Vies : 1
+Joueur *-- Pseudo : 1
+Progression *-- CodeSortie : 0..1
+
+Monde *-- Nom : 1
+Epreuve *-- Nom : 1
+Offre *-- Nom : 1
+Competence *-- Nom : 1
+
+Epreuve *-- Identifiant : 1
+Offre *-- Identifiant : 1
+Joueur *-- Identifiant : 1
+Partie *-- Identifiant : 1
+
+Epreuve *-- EntiersPositifs : 1
+Course *-- EntiersPositifs : 3
+Partie *-- EntiersPositifs : 2
+
+Obstacle *-- TypeObstacle : 1
+Recruteur *-- Humeur : 1
+Competence *-- Affichage : 1
+EpreuveExamen *-- ThemeExamen : 1
+Objet *-- TypeObjet : 1
+Partie *-- Statut : 1
+
+' ---------- notes ----------
+note right of Epreuve
+  intro = bulle de dialogue
+  avant l'épreuve
+end note
+
+note right of Exigence
+  même identifiant que Competence
+  (keyref vers idC, non piège)
+end note
+
+note right of EpreuveExamen
+  objet = idObj de l'Objet qui cache l'examen
+  ordre 1, 2, 3 = chaîne d'indices
+end note
+
+note right of EpreuvePorte
+  le code = reponse du dernier examen
+end note
+
+note right of Progression
+  epreuveCourante = idE (keyref)
+  offresCollectees = idO (keyref)
+end note
+
+note right of Recruteur : jaugeMax = nombre de compétences à attraper (10)\nhumeur dérivée de la jauge\n(0-3 enerve, 4-7 neutre, 8-10 conquis)
+
+@enduml
