@@ -1,0 +1,35 @@
+﻿<Joueur xmlns="http://www.univ-grenoble-alpes.fr/l3miage/joueur" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://www.univ-grenoble-alpes.fr/l3miage/joueur ../xsd/joueur.xsd">
+    <!--  Informations du joueur  -->
+    <idJ/>
+    <pseudo/>
+    <!--  Parties du joueur  -->
+    <Parties>
+        <Partie>
+            <idP/>
+            <statut/>
+            <date/>
+            <score/>
+            <duree/>
+            <!--  Progression de la partie  -->
+            <Progression>
+                <epreuveCourante/>
+                <viesRestantes/>
+                <!--  Offres collectées : 0 à 9  -->
+                <offresCollectees/>
+                <indicesObtenus/>
+                <!--  Code de sortie facultatif  -->
+                <codeSecret/>
+            </Progression>
+            <!--  Résultats des épreuves  -->
+            <ResultatEpreuve>
+                <epreuve/>
+                <reussie/>
+                <viesPerdues/>
+                <erreurs/>
+                <duree/>
+            </ResultatEpreuve>
+        </Partie>
+    </Parties>
+</Joueur>
