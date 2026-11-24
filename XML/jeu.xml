@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<jeu xmlns="http://www.univ-grenoble-alpes.fr/l3miage/jeu"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.univ-grenoble-alpes.fr/l3miage/jeu ../XSD/jeu.xsd">
+
+    <titre>L3_survival</titre>
+    <viesInitiales>3</viesInitiales>
+
+    <mondes>
+        <!-- ============ MONDE 1 (Stage) ============ -->
+        <monde numero=" 1 "> 
+            <nomM> Stage </nomM>
+            <epreuves>
+                
+                <course idE=" ">  
+                    
+                    <nomE> </nomE>
+                    <ordre> </ordre>
+                    <intro> </intro>
+                    <offresMin> </offresMin>
+                    <seuilVitesse2> </seuilVitesse2>
+                    <seuilVitesse3> </seuilVitesse3>
+                    
+                    <offres>
+                        <!-- on va faire 9 offre -->
+                        <offre idO=" ">
+                            <poste> </poste>
+                            <exigence competence=""/>
+                            <exigence competence=""/>
+                            <exigence competence=""/>
+                        </offre>
+                        
+                    </offres>
+                    
+                    <obstacles>
+                        <obstacle type=" "/>
+                    </obstacles>
+                    
+                </course>
+
+                <!-- Epreuve de type atelierCV -->
+                <atelierCV idE=" ">
+                    <nomE> </nomE>
+                    <ordre> </ordre>
+                    <intro> </intro>
+                    <tempsParCV> </tempsParCV>
+                    
+                    <competences>
+                        <competence idC=" " piege=" " affichage=" ">
+                            <nomC> </nomC>
+                        </competence>
+                    </competences>
+                </atelierCV>
+
+                <!-- Epreuve de type entretien -->
+                <entretien idE="">
+                    <nomE> </nomE>
+                    <ordre> </ordre>
+                    <intro> </intro>
+                    <recruteur>
+                        <jaugeMax> </jaugeMax>
+                        <humeur> </humeur>  <!-- enerve | neutre | conquis -->
+                    </recruteur>
+                </entretien>
+
+            </epreuves>
+        </monde>
+
+        <!-- ============ MONDE 2 (examens) ============ -->
+        <mondeExamens numero="">
+            <nomM> </nomM>
+            
+            <epreuves>
+
+                <examen idE="" objet="">
+                    <nomE> </nomE>
+                    <ordre> </ordre>
+                    <intro> </intro>
+                    <theme> </theme>  <!-- tri | logique | binaire -->
+                    <enonce> </enonce>
+                    <reponse> </reponse>
+                    <indice> </indice>
+                </examen>
+
+                <porte idE="" objet="">
+                    <nomE> </nomE>
+                    <ordre> </ordre>
+                    <intro> </intro>
+                </porte>
+
+            </epreuves>
+            <salle idS="">
+                <nomS> </nomS>
+                <objets>
+                    <!-- type = bureau | bibliotheque | armoire | ordinateur -->
+                    <objet idObj="" type="">
+                        <nomObj> </nomObj>
+                        <message> </message>
+                    </objet>
+                </objets>
+            </salle>
+        </mondeExamens>
+
+    </mondes>
+</jeu>

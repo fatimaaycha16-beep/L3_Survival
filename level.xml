@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Niveaux>
-    <Niveau id="1">
-        <Type>SubwaySurf</Type>
-        <VitesseDefilement>5</VitesseDefilement>
-    </Niveau>
-</Niveaux>

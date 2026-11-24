@@ -1,0 +1,50 @@
+@startuml
+title L3 Survival - Diagramme de sequence : deroulement d'une partie
+autonumber
+actor Joueur as J
+participant Game1
+participant GameManager as GM
+participant XmlValidator as V
+participant XmlLoader as L
+participant Epreuve as E
+participant SaveService as S
+
+== Lancement ==
+J -> Game1 : lance le jeu
+Game1 -> GM : DemarrerPartie()
+GM -> V : Valider("jeu.xml", "l3survival.xsd")
+alt XML invalide
+    V --> GM : false
+    GM --> Game1 : erreur (arret)
+else XML valide
+    V --> GM : true
+    GM -> L : ChargerJeu("jeu.xml")
+    L --> GM : ConfigJeu (epreuves, vies)
+end
+
+== Boucle d'une epreuve ==
+loop tant que l'epreuve n'est pas terminee
+    J -> Game1 : touches / souris
+    Game1 -> E : Update(gameTime)
+    E -> E : deplacements, collisions
+    alt collision avec obstacle
+        E -> GM : PerdreVie()
+        alt vies = 0
+            GM --> Game1 : Game Over (recommencer l'epreuve)
+        end
+    else collision avec offre / competence
+        E -> E : incrementer compteur\n(ajuster vitesse)
+    end
+    Game1 -> E : Draw(spriteBatch)
+end
+
+== Changement d'epreuve ==
+E --> GM : EstTerminee() = true
+GM -> S : Sauvegarder(partie)
+S --> GM : ok
+GM -> GM : EpreuveSuivante()
+
+== Fin ==
+GM --> Game1 : victoire (code de la porte valide)
+Game1 --> J : ecran de fin + score
+@enduml

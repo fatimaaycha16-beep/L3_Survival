@@ -1,0 +1,199 @@
+@startuml
+title L3 Survival - Diagramme de classes (code C# / MonoGame)
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+hide empty members
+
+package "Noyau du jeu" {
+    class Game1 <<MonoGame>> {
+        - spriteBatch : SpriteBatch
+        + LoadContent()
+        + Update(gameTime)
+        + Draw(gameTime)
+    }
+
+    class GameManager {
+        - viesRestantes : int
+        - indexEpreuve : int
+        + DemarrerPartie()
+        + EpreuveSuivante()
+        + PerdreVie()
+        + EstGameOver() : bool
+    }
+
+    class Hud {
+        + Draw(spriteBatch, vies, offres, vitesse)
+    }
+}
+
+package "Epreuves" {
+    abstract class Epreuve {
+        # idE : string
+        # nomE : string
+        # ordre : int
+        # intro : string
+        + {abstract} Update(gameTime)
+        + {abstract} Draw(spriteBatch)
+        + {abstract} EstTerminee() : bool
+    }
+
+    class EpreuveCourse {
+        - offresMin : int
+        - seuilVitesse2 : int
+        - seuilVitesse3 : int
+        - niveauVitesse : int
+        - offresAttrapees : int
+        + DetecterCollisions()
+        + AjusterVitesse()
+    }
+    class AtelierCV {
+        - tempsRestant : int
+        + ChoisirCompetence(c : Competence)
+    }
+    class Entretien {
+        - jauge : int
+        + AttraperCompetence()
+    }
+    class EpreuveExamen {
+        - theme : ThemeExamen
+        - enonce : string
+        - reponse : string
+        + Interagir(o : ObjetSalle)
+    }
+    class EpreuvePorte {
+        + SaisirCode(code : string) : bool
+    }
+}
+
+package "Entites" {
+    abstract class Entite {
+        # position : Vector2
+        # texture : Texture2D
+        + {abstract} Update(gameTime)
+        + Draw(spriteBatch)
+        + Bounds() : Rectangle
+    }
+    class Joueur {
+        - pseudo : string
+        - vitesse : float
+        + Deplacer(clavier)
+        + Sauter()
+    }
+    class Offre {
+        - idO : string
+        - poste : string
+    }
+    class Obstacle {
+        - type : TypeObstacle
+    }
+    class Competence {
+        - idC : string
+        - piege : bool
+        - nomC : string
+    }
+    class Recruteur {
+        - jaugeMax : int
+        - humeur : Humeur
+        + LancerCompetence()
+    }
+    class ObjetSalle {
+        - idObj : string
+        - type : TypeObjet
+        - message : string
+    }
+}
+
+package "Donnees (XML)" {
+    class XmlValidator {
+        + Valider(xml : string, xsd : string) : bool
+    }
+    class XmlLoader {
+        + ChargerJeu(chemin : string) : ConfigJeu
+    }
+    class ConfigJeu {
+        + titre : string
+        + viesInitiales : int
+        + epreuves : List<Epreuve>
+    }
+    class SaveService {
+        + Sauvegarder(partie : Partie, chemin : string)
+        + Charger(chemin : string) : Partie
+    }
+    class Partie {
+        + idP : string
+        + statut : Statut
+        + score : int
+        + duree : int
+        + progression : Progression
+    }
+    class Progression {
+        + epreuveCourante : string
+        + viesRestantes : int
+        + offresCollectees : List<string>
+        + codeSecret : string
+    }
+}
+
+enum TypeObstacle {
+    dossier
+    bug
+}
+enum Humeur {
+    enerve
+    neutre
+    conquis
+}
+enum TypeObjet {
+    bureau
+    bibliotheque
+    armoire
+    ordinateur
+}
+enum ThemeExamen {
+    tri
+    logique
+    binaire
+}
+enum Statut {
+    enCours
+    terminee
+    abandonnee
+}
+
+' heritage
+Epreuve <|-- EpreuveCourse
+Epreuve <|-- AtelierCV
+Epreuve <|-- Entretien
+Epreuve <|-- EpreuveExamen
+Epreuve <|-- EpreuvePorte
+Entite <|-- Joueur
+Entite <|-- Offre
+Entite <|-- Obstacle
+Entite <|-- Competence
+Entite <|-- Recruteur
+Entite <|-- ObjetSalle
+
+' composition / association
+Game1 *-- GameManager
+Game1 *-- Hud
+GameManager *-- Joueur
+GameManager o-- "1..*" Epreuve
+GameManager --> XmlLoader
+GameManager --> XmlValidator
+GameManager --> SaveService
+XmlLoader ..> ConfigJeu : cree
+ConfigJeu *-- "1..*" Epreuve
+EpreuveCourse *-- "9" Offre
+EpreuveCourse *-- "1..*" Obstacle
+AtelierCV *-- "1..*" Competence
+Entretien *-- Recruteur
+EpreuveExamen --> ObjetSalle
+EpreuvePorte --> ObjetSalle
+SaveService ..> Partie
+Partie *-- Progression
+Obstacle --> TypeObstacle
+Recruteur --> Humeur
+ObjetSalle --> TypeObjet
+EpreuveExamen --> ThemeExamen
+Partie --> Statut
+@enduml
