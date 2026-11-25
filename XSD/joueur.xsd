@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:jr="http://www.univ-grenoble-alpes.fr/l3miage/joueur"
+        targetNamespace="http://www.univ-grenoble-alpes.fr/l3miage/joueur"
+        elementFormDefault="qualified">
+    <!-- balise du document 2 : joueur -->
+    <element name="joueur" type="jr:Joueur">
+        <unique name="unicitePartie">
+            <selector xpath="jr:parties/jr:partie"/>
+            <field xpath="@idP"/>
+        </unique>
+    </element>
+
+    <complexType name="Joueur">
+        <sequence>
+            <element name="pseudo" type="jr:Pseudo"/>
+            <element name="parties" type="jr:Parties"/>
+        </sequence>
+        <attribute name="idJ" type="jr:Identifiant" use="required"/>
+    </complexType>
+
+    <complexType name="Parties">
+        <sequence>
+            <element name="partie" type="jr:Partie" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="Partie">
+        <sequence>
+            <element name="date" type="dateTime"/>
+            <element name="score" type="jr:EntiersPositifs"/>
+            <element name="duree" type="jr:EntiersPositifs"/>
+            <element name="progression" type="jr:Progression"/>
+            <element name="resultat" type="jr:ResultatEpreuve" minOccurs="0" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="idP" type="jr:Identifiant" use="required"/>
+        <attribute name="statut" type="jr:Statut" use="required"/>
+    </complexType>
+
+    <complexType name="Progression">
+        <sequence>
+            <element name="epreuveCourante" type="jr:Identifiant"/>
+            <element name="viesRestantes" type="jr:Vies"/>
+            <element name="offreCollectee" type="jr:Identifiant" minOccurs="0" maxOccurs="9"/>
+            <element name="indicesObtenus" type="jr:EntiersPositifs"/>
+            <element name="codeSecret" type="jr:CodeSortie" minOccurs="0"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="ResultatEpreuve">
+        <sequence>
+            <element name="reussie" type="boolean"/>
+            <element name="viesPerdues" type="jr:Vies"/>
+            <element name="erreurs" type="jr:EntiersPositifs"/>
+            <element name="duree" type="jr:EntiersPositifs"/>
+        </sequence>
+        <attribute name="epreuve" type="jr:Identifiant" use="required"/>
+    </complexType>
+
+
+    <simpleType name="EntiersPositifs">
+        <restriction base="int">
+            <minInclusive value="0"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Vies">
+        <restriction base="int">
+            <minInclusive value="0"/>
+            <maxInclusive value="3"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Identifiant">
+        <restriction base="int">
+            <pattern value="[0-9]{2}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Pseudo">
+        <restriction base="string">
+            <pattern value="[A-Za-z0-9_]{3,15}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="CodeSortie">
+        <restriction base="string">
+            <pattern value="[0-9]{3}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Statut">
+        <restriction base="string">
+            <enumeration value="enCours"/>
+            <enumeration value="terminee"/>
+            <enumeration value="abandonnee"/>
+        </restriction>
+    </simpleType>
+
+</schema> 
