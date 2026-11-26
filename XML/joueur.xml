@@ -1,35 +1,27 @@
-﻿<Joueur xmlns="http://www.univ-grenoble-alpes.fr/l3miage/joueur" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xsi:schemaLocation="http://www.univ-grenoble-alpes.fr/l3miage/joueur ../xsd/joueur.xsd">
-    <!--  Informations du joueur  -->
-    <idJ/>
-    <pseudo/>
-    <!--  Parties du joueur  -->
-    <Parties>
-        <Partie>
-            <idP/>
-            <statut/>
-            <date/>
-            <score/>
-            <duree/>
-            <!--  Progression de la partie  -->
-            <Progression>
-                <epreuveCourante/>
-                <viesRestantes/>
-                <!--  Offres collectées : 0 à 9  -->
-                <offresCollectees/>
-                <indicesObtenus/>
-                <!--  Code de sortie facultatif  -->
-                <codeSecret/>
-            </Progression>
-            <!--  Résultats des épreuves  -->
-            <ResultatEpreuve>
-                <epreuve/>
-                <reussie/>
-                <viesPerdues/>
-                <erreurs/>
-                <duree/>
-            </ResultatEpreuve>
-        </Partie>
-    </Parties>
-</Joueur>
+﻿<joueur xmlns="http://www.univ-grenoble-alpes.fr/l3miage/joueur"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.univ-grenoble-alpes.fr/l3miage/joueur ../xsd/joueur.xsd"
+        idJ=" ">
+    <pseudo> </pseudo>
+    <parties>
+        <partie idP=" " statut=" ">
+            <date> </date>
+            <score> </score>
+            <duree> </duree>
+            <progression>
+                <epreuveCourante> </epreuveCourante>
+                <viesRestantes> </viesRestantes>
+                <offreCollectee> </offreCollectee>
+                <offreCollectee> </offreCollectee>
+                <indicesObtenus> </indicesObtenus>
+                <codeSecret> </codeSecret>
+            </progression>
+            <resultat epreuve=" ">
+                <reussie> </reussie>
+                <viesPerdues> </viesPerdues>
+                <erreurs> </erreurs>
+                <duree> </duree>
+            </resultat>
+        </partie>
+    </parties>
+</joueur>
