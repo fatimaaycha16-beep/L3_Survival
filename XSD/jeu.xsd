@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:j="http://www.univ-grenoble-alpes.fr/l3miage/jeu"
+        targetNamespace="http://www.univ-grenoble-alpes.fr/l3miage/jeu"
+        elementFormDefault="qualified">
+    <!-- balise du document 1 :jeu -->
+    <element name="jeu" type="j:Jeu">
+        <key name="cleCompetence">
+            <selector xpath="j:monde/j:epreuve/j:competences/j:competence"/>
+            <field xpath="@idC"/>
+        </key>
+
+        <keyref name="refExigence" refer="j:cleCompetence">
+            <selector xpath="j:monde/j:epreuve/j:offres/j:offre/j:exigence"/>
+            <field xpath="@competence"/>
+        </keyref>
+
+        <key name="cleObjet">
+            <selector xpath="j:monde/j:salleExamen/j:objets/j:objet"/>
+            <field xpath="@idObj"/>
+        </key>
+
+        <keyref name="refObjetEpreuve" refer="j:cleObjet">
+            <selector xpath="j:monde/j:epreuve"/>
+            <field xpath="@objet"/>
+        </keyref>
+
+        <unique name="uniciteEpreuve">
+            <selector xpath="j:monde/j:epreuve"/>
+            <field xpath="@idE"/>
+        </unique>
+        <unique name="uniciteOffre">
+            <selector xpath="j:monde/j:epreuve/j:offres/j:offre"/>
+            <field xpath="@idO"/>
+        </unique>
+    </element>
+
+    <complexType name="Jeu">
+        <sequence>
+            <element name="titre" type="string"/>
+            <element name="viesInitiales" type="j:Vies"/>
+            <element name="monde" type="j:Monde" minOccurs="2" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+
+    <!--les mondes-->
+    <complexType name="Monde">
+        <sequence>
+            <element name="nomM" type="j:Nom"/>
+            <element name="epreuve" type="j:Epreuve" maxOccurs="unbounded"/>
+        </sequence>
+        <attribute name="numero" type="j:EntiersPositifs" use="required"/>
+    </complexType>
+
+    <complexType name="MondeExamens">
+        <complexContent>
+            <extension base="j:Monde">
+                <sequence>
+                    <element name="salleExamen" type="j:SalleExamen"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <!-- epreuve (abstraite, et les 5 sous types (epreuves) ) -->
+    <complexType name="Epreuve" abstract="true">
+        <sequence>
+            <element name="nomE" type="j:Nom"/>
+            <element name="ordre" type="j:EntiersPositifs"/>
+            <element name="intro" type="string"/>
+        </sequence>
+        <attribute name="idE" type="j:Identifiant" use="required"/>
+    </complexType>
+
+    <!-- epreuve course -->
+    <complexType name="Course">
+        <complexContent>
+            <extension base="j:Epreuve">
+                <sequence>
+                    <element name="offresMin" type="j:EntiersPositifs"/>
+                    <element name="seuilVitesse2" type="j:EntiersPositifs"/>
+                    <element name="seuilVitesse3" type="j:EntiersPositifs"/>
+                    <element name="offres" type="j:Offres"/>
+                    <element name="obstacles" type="j:Obstacles"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="Offres">
+        <sequence>
+            <element name="offre" type="j:Offre" minOccurs="9" maxOccurs="9"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="Offre">
+        <sequence>
+            <element name="poste" type="j:Nom"/>
+            <element name="exigence" type="j:Exigence" minOccurs="3" maxOccurs="3"/>
+        </sequence>
+        <attribute name="idO" type="j:Identifiant" use="required"/>
+    </complexType>
+
+    <complexType name="Exigence">
+        <attribute name="competence" type="j:Identifiant" use="required"/>
+    </complexType>
+
+    <complexType name="Obstacles">
+        <sequence>
+            <element name="obstacle" type="j:Obstacle" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="Obstacle">
+        <attribute name="type" type="j:TypeObstacle" use="required"/>
+    </complexType>
+
+    <!-- epreuve CV -->
+    <complexType name="AtelierCV">
+        <complexContent>
+            <extension base="j:Epreuve">
+                <sequence>
+                    <element name="tempsParCV" type="j:EntiersPositifs"/>
+                    <element name="competences" type="j:Competences"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="Competences">
+        <sequence>
+            <element name="competence" type="j:Competence" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="Competence">
+        <sequence>
+            <element name="nomC" type="j:Nom"/>
+        </sequence>
+        <attribute name="idC" type="j:Identifiant" use="required"/>
+        <attribute name="piege" type="boolean" use="required"/>
+        <attribute name="affichage" type="j:Affichage" use="required"/>
+    </complexType>
+
+    <!-- epreuve entretien -->
+    <complexType name="Entretien">
+        <complexContent>
+            <extension base="j:Epreuve">
+                <sequence>
+                    <element name="recruteur" type="j:Recruteur"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="Recruteur">
+        <sequence>
+            <element name="jaugeMax" type="j:EntiersPositifs"/>
+            <element name="humeur" type="j:Humeur"/>
+        </sequence>
+    </complexType>
+
+    <!-- epreuve examen (monde 2) -->
+    <complexType name="EpreuveExamen">
+        <complexContent>
+            <extension base="j:Epreuve">
+                <sequence>
+                    <element name="theme" type="j:ThemeExamen"/>
+                    <element name="enonce" type="string"/>
+                    <element name="reponse" type="string"/>
+                    <element name="indice" type="string"/>
+                </sequence>
+                <attribute name="objet" type="j:Identifiant" use="required"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="EpreuvePorte">
+        <complexContent>
+            <extension base="j:Epreuve">
+                <attribute name="objet" type="j:Identifiant" use="required"/>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <!--salle d'examen-->
+    <complexType name="SalleExamen">
+        <sequence>
+            <element name="nomS" type="j:Nom"/>
+            <element name="objets" type="j:Objets"/>
+        </sequence>
+        <attribute name="idS" type="j:Identifiant" use="required"/>
+    </complexType>
+
+    <complexType name="Objets">
+        <sequence>
+            <element name="objet" type="j:Objet" maxOccurs="unbounded"/>
+        </sequence>
+    </complexType>
+
+    <complexType name="Objet">
+        <sequence>
+            <element name="nomObj" type="j:Nom"/>
+            <element name="message" type="string"/>
+        </sequence>
+        <attribute name="idObj" type="j:Identifiant" use="required"/>
+        <attribute name="type" type="j:TypeObjet" use="required"/>
+    </complexType>
+
+
+    <simpleType name="EntiersPositifs">
+        <restriction base="int">
+            <minInclusive value="0"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Vies">
+        <restriction base="int">
+            <minInclusive value="0"/>
+            <maxInclusive value="3"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Identifiant">
+        <restriction base="int">
+            <pattern value="[0-9]{2}"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Nom">
+        <restriction base="string">
+            <pattern value="[A-Z][A-Za-z éèêëàâîïôöùûüç]+"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="TypeObstacle">
+        <restriction base="string">
+            <enumeration value="dossier"/>
+            <enumeration value="bug"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Humeur">
+        <restriction base="string">
+            <enumeration value="enerve"/>
+            <enumeration value="neutre"/>
+            <enumeration value="conquis"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="Affichage">
+        <restriction base="string">
+            <enumeration value="logo"/>
+            <enumeration value="nom"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="ThemeExamen">
+        <restriction base="string">
+            <enumeration value="tri"/>
+            <enumeration value="logique"/>
+            <enumeration value="binaire"/>
+        </restriction>
+    </simpleType>
+
+    <simpleType name="TypeObjet">
+        <restriction base="string">
+            <enumeration value="bureau"/>
+            <enumeration value="bibliotheque"/>
+            <enumeration value="armoire"/>
+            <enumeration value="ordinateur"/>
+            <enumeration value="porte"/>
+        </restriction>
+    </simpleType>
+</schema>
